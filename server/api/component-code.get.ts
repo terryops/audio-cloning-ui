@@ -1,18 +1,6 @@
 import { readFileSync, existsSync } from 'fs'
 import { join } from 'path'
 
-// 导入预生成的组件代码（在构建时生成）
-let componentCodes: Record<string, string> = {}
-
-try {
-  // 动态导入组件代码模块
-  const codesModule = await import('../utils/component-codes')
-  componentCodes = codesModule.componentCodes || {}
-  console.log(`✓ Loaded ${Object.keys(componentCodes).length} component codes`)
-} catch (error) {
-  console.log('Component codes module not found, will use filesystem fallback')
-}
-
 export default defineEventHandler((event) => {
   const query = getQuery(event)
   const fileName = query.file as string
@@ -33,26 +21,36 @@ export default defineEventHandler((event) => {
   }
 
   try {
-    // 首先尝试从预加载的代码获取（生产环境）
-    if (componentCodes[fileName]) {
-      return { code: componentCodes[fileName] }
-    }
-
-    // 开发环境：直接读取文件
+    // 仅在开发环境读取文件
     const filePath = join(process.cwd(), 'components', fileName)
     if (existsSync(filePath)) {
       const code = readFileSync(filePath, 'utf-8')
       return { code }
     }
 
-    // 如果都找不到，返回提示
+    // 生产环境或文件不存在：返回 GitHub 链接
+    const githubUrl = `https://github.com/terryops/audio-cloning-ui/blob/main/components/${fileName}`
     return {
-      code: `// Source code not available\n// Visit GitHub: https://github.com/terryops/audio-cloning-ui/blob/main/components/${fileName}`
+      code: `/**
+ * Component: ${fileName}
+ *
+ * Source code is available on GitHub:
+ * ${githubUrl}
+ *
+ * This is a production build and source files are not included.
+ * To view the source code, please visit the GitHub repository above.
+ */`
     }
   } catch (error) {
     console.error('Error loading component code:', error)
+    const githubUrl = `https://github.com/terryops/audio-cloning-ui/blob/main/components/${fileName}`
     return {
-      code: `// Failed to load code\n// Visit GitHub: https://github.com/terryops/audio-cloning-ui/blob/main/components/${fileName}`
+      code: `/**
+ * Failed to load component code
+ *
+ * View source on GitHub:
+ * ${githubUrl}
+ */`
     }
   }
 })
