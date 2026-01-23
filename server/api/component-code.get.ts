@@ -1,7 +1,27 @@
 import { readFileSync, existsSync } from 'fs'
 import { join } from 'path'
 
-export default defineEventHandler((event) => {
+// 缓存：导入预生成的组件代码
+let componentCodesCache: Record<string, string> | null = null
+
+async function loadComponentCodes() {
+  if (componentCodesCache) {
+    return componentCodesCache
+  }
+
+  try {
+    // 尝试导入预生成的代码索引
+    const codesModule = await import('../codes/index')
+    componentCodesCache = codesModule.componentCodes || {}
+    console.log(`✓ Loaded ${Object.keys(componentCodesCache).length} prebuilt component codes`)
+    return componentCodesCache
+  } catch (error) {
+    console.log('Prebuilt codes not found, using filesystem fallback')
+    return {}
+  }
+}
+
+export default defineEventHandler(async (event) => {
   const query = getQuery(event)
   const fileName = query.file as string
 
@@ -21,36 +41,26 @@ export default defineEventHandler((event) => {
   }
 
   try {
-    // 仅在开发环境读取文件
+    // 首先尝试从预生成的代码获取
+    const prebuiltCodes = await loadComponentCodes()
+    if (prebuiltCodes[fileName]) {
+      return { code: prebuiltCodes[fileName] }
+    }
+
+    // 开发环境：直接读取文件
     const filePath = join(process.cwd(), 'components', fileName)
     if (existsSync(filePath)) {
       const code = readFileSync(filePath, 'utf-8')
       return { code }
     }
 
-    // 生产环境或文件不存在：返回 GitHub 链接
-    const githubUrl = `https://github.com/terryops/audio-cloning-ui/blob/main/components/${fileName}`
-    return {
-      code: `/**
- * Component: ${fileName}
- *
- * Source code is available on GitHub:
- * ${githubUrl}
- *
- * This is a production build and source files are not included.
- * To view the source code, please visit the GitHub repository above.
- */`
-    }
+    // 如果都找不到
+    throw new Error('Component not found')
   } catch (error) {
     console.error('Error loading component code:', error)
     const githubUrl = `https://github.com/terryops/audio-cloning-ui/blob/main/components/${fileName}`
     return {
-      code: `/**
- * Failed to load component code
- *
- * View source on GitHub:
- * ${githubUrl}
- */`
+      code: `// Failed to load component code\n// View source on GitHub: ${githubUrl}`
     }
   }
 })
