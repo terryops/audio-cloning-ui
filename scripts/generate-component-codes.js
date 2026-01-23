@@ -6,12 +6,12 @@ const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
 
 const componentsDir = join(__dirname, '../components')
-const outputDir = join(__dirname, '../public')
-const outputFile = join(outputDir, 'component-codes.json')
+const serverDir = join(__dirname, '../server')
+const outputFile = join(serverDir, 'component-codes.json')
 
-// 确保 public 目录存在
+// 确保 server 目录存在
 try {
-  mkdirSync(outputDir, { recursive: true })
+  mkdirSync(serverDir, { recursive: true })
 } catch (err) {
   // 目录已存在
 }
@@ -28,6 +28,7 @@ files.forEach(file => {
   }
 })
 
-// 写入 JSON 文件
+// 写入 JSON 文件到 server 目录
 writeFileSync(outputFile, JSON.stringify(componentCodes, null, 2))
 console.log(`✓ Generated component codes: ${Object.keys(componentCodes).length} files`)
+console.log(`✓ Output: ${outputFile}`)

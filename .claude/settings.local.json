@@ -12,7 +12,9 @@
       "Bash(vercel login)",
       "Bash(vercel --prod --yes:*)",
       "Bash(vercel:*)",
-      "Bash(node scripts/generate-component-codes.js:*)"
+      "Bash(node scripts/generate-component-codes.js:*)",
+      "Bash(git commit:*)",
+      "Bash(git push:*)"
     ]
   }
 }

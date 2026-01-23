@@ -1,25 +1,15 @@
 import { readFileSync, existsSync } from 'fs'
 import { join } from 'path'
 
-// 缓存组件代码
-let componentCodes: Record<string, string> | null = null
+// 尝试导入预生成的组件代码
+let preloadedCodes: Record<string, string> = {}
 
-const loadComponentCodes = () => {
-  if (componentCodes) return componentCodes
-
-  try {
-    // 尝试从预生成的 JSON 文件加载（生产环境）
-    const jsonPath = join(process.cwd(), 'public', 'component-codes.json')
-    if (existsSync(jsonPath)) {
-      const data = readFileSync(jsonPath, 'utf-8')
-      componentCodes = JSON.parse(data)
-      return componentCodes
-    }
-  } catch (error) {
-    console.error('Failed to load component-codes.json:', error)
-  }
-
-  return null
+try {
+  // 在构建时，这个文件会存在
+  const codesModule = await import('../component-codes.json')
+  preloadedCodes = codesModule.default || codesModule
+} catch (error) {
+  console.log('Component codes not preloaded, will read from filesystem')
 }
 
 export default defineEventHandler((event) => {
@@ -42,10 +32,9 @@ export default defineEventHandler((event) => {
   }
 
   try {
-    // 首先尝试从预生成的 JSON 加载（生产环境）
-    const codes = loadComponentCodes()
-    if (codes && codes[fileName]) {
-      return { code: codes[fileName] }
+    // 首先尝试从预加载的代码获取（生产环境）
+    if (preloadedCodes[fileName]) {
+      return { code: preloadedCodes[fileName] }
     }
 
     // 开发环境：直接读取文件
@@ -60,6 +49,7 @@ export default defineEventHandler((event) => {
       code: `// Source code not available\n// Visit GitHub: https://github.com/terryops/audio-cloning-ui/blob/main/components/${fileName}`
     }
   } catch (error) {
+    console.error('Error loading component code:', error)
     return {
       code: `// Failed to load code\n// Visit GitHub: https://github.com/terryops/audio-cloning-ui/blob/main/components/${fileName}`
     }
