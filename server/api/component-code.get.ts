@@ -1,15 +1,39 @@
 import { readFileSync, existsSync } from 'fs'
-import { join } from 'path'
+import { join, dirname } from 'path'
+import { fileURLToPath } from 'url'
 
-// 尝试导入预生成的组件代码
+// 在服务器启动时加载组件代码
 let preloadedCodes: Record<string, string> = {}
 
-try {
-  // 在构建时，这个文件会存在
-  const codesModule = await import('../component-codes.json')
-  preloadedCodes = codesModule.default || codesModule
-} catch (error) {
-  console.log('Component codes not preloaded, will read from filesystem')
+function loadPreloadedCodes() {
+  if (Object.keys(preloadedCodes).length > 0) {
+    return preloadedCodes
+  }
+
+  try {
+    // 尝试从多个可能的位置读取
+    const possiblePaths = [
+      // 开发环境
+      join(process.cwd(), 'server', 'component-codes.json'),
+      // Vercel 构建环境
+      join(process.cwd(), '.output', 'server', 'component-codes.json'),
+      // 备用路径
+      join(dirname(fileURLToPath(import.meta.url)), '../component-codes.json'),
+    ]
+
+    for (const path of possiblePaths) {
+      if (existsSync(path)) {
+        const data = readFileSync(path, 'utf-8')
+        preloadedCodes = JSON.parse(data)
+        console.log(`✓ Loaded component codes from: ${path}`)
+        return preloadedCodes
+      }
+    }
+  } catch (error) {
+    console.error('Failed to load preloaded codes:', error)
+  }
+
+  return {}
 }
 
 export default defineEventHandler((event) => {
@@ -32,9 +56,10 @@ export default defineEventHandler((event) => {
   }
 
   try {
-    // 首先尝试从预加载的代码获取（生产环境）
-    if (preloadedCodes[fileName]) {
-      return { code: preloadedCodes[fileName] }
+    // 首先尝试从预加载的代码获取
+    const codes = loadPreloadedCodes()
+    if (codes[fileName]) {
+      return { code: codes[fileName] }
     }
 
     // 开发环境：直接读取文件
