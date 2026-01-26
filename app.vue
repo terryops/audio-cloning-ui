@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen bg-gray-900 flex">
+  <div class="h-screen bg-gray-900 flex overflow-hidden">
     <!-- Left Sidebar -->
     <div class="w-60 bg-gray-800 border-r border-gray-700 flex flex-col shrink-0">
       <!-- Logo -->
