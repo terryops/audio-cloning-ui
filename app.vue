@@ -189,7 +189,7 @@ const billingItems = [
 ]
 
 const modalItems = [
-  { id: 'purchase-clones', name: 'Purchase Clones' },
+  { id: 'upgrade-plan', name: 'Upgrade Plan' },
   { id: 'buy-clones', name: 'Buy Clones' },
 ]
 
@@ -209,7 +209,7 @@ const menuItems = [...billingItems, ...modalItems, ...dubbingItems]
 const componentMap: Record<string, any> = {
   'billing-empty': resolveComponent('BillingDetailsEmpty'),
   'billing-voices': resolveComponent('BillingDetails'),
-  'purchase-clones': resolveComponent('PurchaseClonesModal'),
+  'upgrade-plan': resolveComponent('UpgradePlanModal'),
   'buy-clones': resolveComponent('BuyClonesModal'),
   'dubbing-studio-container': resolveComponent('DubbingStudioContainer'),
   'dubbing-studio': resolveComponent('DubbingStudio'),
@@ -224,7 +224,7 @@ const componentMap: Record<string, any> = {
 const fileNames: Record<string, string> = {
   'billing-empty': 'BillingDetailsEmpty.vue',
   'billing-voices': 'BillingDetails.vue',
-  'purchase-clones': 'PurchaseClonesModal.vue',
+  'upgrade-plan': 'UpgradePlanModal.vue',
   'buy-clones': 'BuyClonesModal.vue',
   'dubbing-studio-container': 'DubbingStudioContainer.vue',
   'dubbing-studio': 'DubbingStudio.vue',
@@ -239,7 +239,7 @@ const fileNames: Record<string, string> = {
 const componentProps: Record<string, any> = {
   'billing-empty': {},
   'billing-voices': {},
-  'purchase-clones': {},
+  'upgrade-plan': {},
   'buy-clones': {},
   'dubbing-studio-container': { availableClones: 2, totalClones: 3 },
   'dubbing-studio': { availableClones: 2, totalClones: 3 },
