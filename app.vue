@@ -14,42 +14,6 @@
 
       <!-- Navigation -->
       <nav class="flex-1 p-3 flex flex-col gap-4 overflow-auto">
-        <!-- Billing Group -->
-        <div>
-          <p class="text-xs font-semibold text-gray-500 uppercase tracking-wider px-3 mb-2">Billing</p>
-          <div class="flex flex-col gap-1">
-            <button
-              v-for="item in billingItems"
-              :key="item.id"
-              class="w-full text-left px-3 py-2 rounded-lg text-sm transition-colors"
-              :class="currentComponent === item.id
-                ? 'bg-[#695fee] text-white'
-                : 'text-gray-400 hover:text-white hover:bg-gray-700'"
-              @click="currentComponent = item.id"
-            >
-              {{ item.name }}
-            </button>
-          </div>
-        </div>
-
-        <!-- Modals Group -->
-        <div>
-          <p class="text-xs font-semibold text-gray-500 uppercase tracking-wider px-3 mb-2">Modals</p>
-          <div class="flex flex-col gap-1">
-            <button
-              v-for="item in modalItems"
-              :key="item.id"
-              class="w-full text-left px-3 py-2 rounded-lg text-sm transition-colors"
-              :class="currentComponent === item.id
-                ? 'bg-[#695fee] text-white'
-                : 'text-gray-400 hover:text-white hover:bg-gray-700'"
-              @click="currentComponent = item.id"
-            >
-              {{ item.name }}
-            </button>
-          </div>
-        </div>
-
         <!-- Voice Clone Group -->
         <div>
           <p class="text-xs font-semibold text-gray-500 uppercase tracking-wider px-3 mb-2">Voice Clone</p>
@@ -68,23 +32,6 @@
           </div>
         </div>
 
-        <!-- Dubbing Studio Group -->
-        <div>
-          <p class="text-xs font-semibold text-gray-500 uppercase tracking-wider px-3 mb-2">Dubbing Studio</p>
-          <div class="flex flex-col gap-1">
-            <button
-              v-for="item in dubbingItems"
-              :key="item.id"
-              class="w-full text-left px-3 py-2 rounded-lg text-sm transition-colors"
-              :class="currentComponent === item.id
-                ? 'bg-[#695fee] text-white'
-                : 'text-gray-400 hover:text-white hover:bg-gray-700'"
-              @click="currentComponent = item.id"
-            >
-              {{ item.name }}
-            </button>
-          </div>
-        </div>
       </nav>
 
       <!-- Footer -->
@@ -192,7 +139,7 @@
 <script setup lang="ts">
 import { codeToHtml } from 'shiki'
 
-const currentComponent = ref('billing-empty')
+const currentComponent = ref('voice-clone-prompt')
 const highlightedCode = ref('')
 const copied = ref(false)
 const isLoadingCode = ref(false)
@@ -228,7 +175,7 @@ const dubbingItems = [
   { id: 'dubbing-save', name: 'Save Dialog' },
 ]
 
-const menuItems = [...billingItems, ...modalItems, ...voiceCloneItems, ...dubbingItems]
+const menuItems = [...voiceCloneItems]
 
 const componentMap: Record<string, any> = {
   'billing-empty': resolveComponent('BillingDetailsEmpty'),
