@@ -50,6 +50,24 @@
           </div>
         </div>
 
+        <!-- Voice Clone Group -->
+        <div>
+          <p class="text-xs font-semibold text-gray-500 uppercase tracking-wider px-3 mb-2">Voice Clone</p>
+          <div class="flex flex-col gap-1">
+            <button
+              v-for="item in voiceCloneItems"
+              :key="item.id"
+              class="w-full text-left px-3 py-2 rounded-lg text-sm transition-colors"
+              :class="currentComponent === item.id
+                ? 'bg-[#695fee] text-white'
+                : 'text-gray-400 hover:text-white hover:bg-gray-700'"
+              @click="currentComponent = item.id"
+            >
+              {{ item.name }}
+            </button>
+          </div>
+        </div>
+
         <!-- Dubbing Studio Group -->
         <div>
           <p class="text-xs font-semibold text-gray-500 uppercase tracking-wider px-3 mb-2">Dubbing Studio</p>
@@ -193,6 +211,12 @@ const modalItems = [
   { id: 'buy-clones', name: 'Buy Clones' },
 ]
 
+const voiceCloneItems = [
+  { id: 'voice-clone-prompt', name: 'Prompt Dialog' },
+  { id: 'voice-clone-speakers-off', name: 'Speakers Off' },
+  { id: 'voice-clone-manage', name: 'Manage Dubbing' },
+]
+
 const dubbingItems = [
   { id: 'dubbing-studio-container', name: 'Complete Flow' },
   { id: 'dubbing-studio', name: 'Default' },
@@ -204,13 +228,16 @@ const dubbingItems = [
   { id: 'dubbing-save', name: 'Save Dialog' },
 ]
 
-const menuItems = [...billingItems, ...modalItems, ...dubbingItems]
+const menuItems = [...billingItems, ...modalItems, ...voiceCloneItems, ...dubbingItems]
 
 const componentMap: Record<string, any> = {
   'billing-empty': resolveComponent('BillingDetailsEmpty'),
   'billing-voices': resolveComponent('BillingDetails'),
   'upgrade-plan': resolveComponent('UpgradePlanModal'),
   'buy-clones': resolveComponent('BuyClonesModal'),
+  'voice-clone-prompt': resolveComponent('VoiceClonePromptDialog'),
+  'voice-clone-speakers-off': resolveComponent('VoiceCloneSpeakersOff'),
+  'voice-clone-manage': resolveComponent('VoiceCloneManage'),
   'dubbing-studio-container': resolveComponent('DubbingStudioContainer'),
   'dubbing-studio': resolveComponent('DubbingStudio'),
   'dubbing-studio-no-clones': resolveComponent('DubbingStudio'),
@@ -226,6 +253,9 @@ const fileNames: Record<string, string> = {
   'billing-voices': 'BillingDetails.vue',
   'upgrade-plan': 'UpgradePlanModal.vue',
   'buy-clones': 'BuyClonesModal.vue',
+  'voice-clone-prompt': 'VoiceClonePromptDialog.vue',
+  'voice-clone-speakers-off': 'VoiceCloneSpeakersOff.vue',
+  'voice-clone-manage': 'VoiceCloneManage.vue',
   'dubbing-studio-container': 'DubbingStudioContainer.vue',
   'dubbing-studio': 'DubbingStudio.vue',
   'dubbing-studio-no-clones': 'DubbingStudio.vue',
@@ -241,6 +271,9 @@ const componentProps: Record<string, any> = {
   'billing-voices': {},
   'upgrade-plan': {},
   'buy-clones': {},
+  'voice-clone-prompt': {},
+  'voice-clone-speakers-off': {},
+  'voice-clone-manage': {},
   'dubbing-studio-container': { availableClones: 2, totalClones: 3 },
   'dubbing-studio': { availableClones: 2, totalClones: 3 },
   'dubbing-studio-no-clones': { availableClones: 0, totalClones: 3 },

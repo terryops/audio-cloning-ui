@@ -8,7 +8,10 @@ import DubbingStudioPreview from './DubbingStudioPreview'
 import DubbingStudioRecording from './DubbingStudioRecording'
 import DubbingStudioSaveDialog from './DubbingStudioSaveDialog'
 import DubbingStudioUploaded from './DubbingStudioUploaded'
-import PurchaseClonesModal from './PurchaseClonesModal'
+import UpgradePlanModal from './UpgradePlanModal'
+import VoiceCloneManage from './VoiceCloneManage'
+import VoiceClonePromptDialog from './VoiceClonePromptDialog'
+import VoiceCloneSpeakersOff from './VoiceCloneSpeakersOff'
 
 export const componentCodes: Record<string, string> = {
   'BillingDetails.vue': BillingDetails,
@@ -20,5 +23,8 @@ export const componentCodes: Record<string, string> = {
   'DubbingStudioRecording.vue': DubbingStudioRecording,
   'DubbingStudioSaveDialog.vue': DubbingStudioSaveDialog,
   'DubbingStudioUploaded.vue': DubbingStudioUploaded,
-  'PurchaseClonesModal.vue': PurchaseClonesModal,
+  'UpgradePlanModal.vue': UpgradePlanModal,
+  'VoiceCloneManage.vue': VoiceCloneManage,
+  'VoiceClonePromptDialog.vue': VoiceClonePromptDialog,
+  'VoiceCloneSpeakersOff.vue': VoiceCloneSpeakersOff,
 }
