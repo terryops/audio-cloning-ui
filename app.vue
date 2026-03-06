@@ -162,6 +162,7 @@ const voiceCloneItems = [
   { id: 'voice-clone-prompt', name: 'Prompt Dialog' },
   { id: 'voice-clone-speakers-off', name: 'Speakers Off' },
   { id: 'voice-clone-manage', name: 'Manage Dubbing' },
+  { id: 're-clone-subtitle', name: 'Re-Clone Subtitle' },
 ]
 
 const dubbingItems = [
@@ -185,6 +186,7 @@ const componentMap: Record<string, any> = {
   'voice-clone-prompt': resolveComponent('VoiceClonePromptDialog'),
   'voice-clone-speakers-off': resolveComponent('VoiceCloneSpeakersOff'),
   'voice-clone-manage': resolveComponent('VoiceCloneManage'),
+  're-clone-subtitle': resolveComponent('ReCloneSubtitle'),
   'dubbing-studio-container': resolveComponent('DubbingStudioContainer'),
   'dubbing-studio': resolveComponent('DubbingStudio'),
   'dubbing-studio-no-clones': resolveComponent('DubbingStudio'),
@@ -203,6 +205,7 @@ const fileNames: Record<string, string> = {
   'voice-clone-prompt': 'VoiceClonePromptDialog.vue',
   'voice-clone-speakers-off': 'VoiceCloneSpeakersOff.vue',
   'voice-clone-manage': 'VoiceCloneManage.vue',
+  're-clone-subtitle': 'ReCloneSubtitle.vue',
   'dubbing-studio-container': 'DubbingStudioContainer.vue',
   'dubbing-studio': 'DubbingStudio.vue',
   'dubbing-studio-no-clones': 'DubbingStudio.vue',
@@ -221,6 +224,7 @@ const componentProps: Record<string, any> = {
   'voice-clone-prompt': {},
   'voice-clone-speakers-off': {},
   'voice-clone-manage': {},
+  're-clone-subtitle': {},
   'dubbing-studio-container': { availableClones: 2, totalClones: 3 },
   'dubbing-studio': { availableClones: 2, totalClones: 3 },
   'dubbing-studio-no-clones': { availableClones: 0, totalClones: 3 },

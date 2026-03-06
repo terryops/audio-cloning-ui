@@ -11,6 +11,7 @@ import DubbingStudioUploaded from './DubbingStudioUploaded'
 import UpgradePlanModal from './UpgradePlanModal'
 import VoiceCloneManage from './VoiceCloneManage'
 import VoiceClonePromptDialog from './VoiceClonePromptDialog'
+import ReCloneSubtitle from './ReCloneSubtitle'
 import VoiceCloneSpeakersOff from './VoiceCloneSpeakersOff'
 
 export const componentCodes: Record<string, string> = {
@@ -24,6 +25,7 @@ export const componentCodes: Record<string, string> = {
   'DubbingStudioSaveDialog.vue': DubbingStudioSaveDialog,
   'DubbingStudioUploaded.vue': DubbingStudioUploaded,
   'UpgradePlanModal.vue': UpgradePlanModal,
+  'ReCloneSubtitle.vue': ReCloneSubtitle,
   'VoiceCloneManage.vue': VoiceCloneManage,
   'VoiceClonePromptDialog.vue': VoiceClonePromptDialog,
   'VoiceCloneSpeakersOff.vue': VoiceCloneSpeakersOff,
