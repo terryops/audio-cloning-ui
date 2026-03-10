@@ -97,7 +97,7 @@ const handleReclone = () => {
           </div>
 
           <!-- Text -->
-          <div class="flex-1 flex flex-col gap-0.5 min-w-0">
+          <div class="flex-1 flex flex-col gap-0.5 min-w-0 text-left">
             <span
               class="text-xs font-['Reddit_Sans'] truncate"
               :class="selectedVoiceId === voice.id ? 'font-medium text-[#695fee]' : 'text-[#202123]'"
@@ -137,7 +137,7 @@ const handleReclone = () => {
         @click="handleReclone"
       >
         <UIcon name="i-lucide-refresh-cw" class="w-4 h-4 text-white" />
-        Re-Clone Subtitle
+        Re-Clone
       </button>
     </div>
   </div>

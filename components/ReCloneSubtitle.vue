@@ -4,6 +4,7 @@ interface VoiceOption {
   text: string
   timeStart: string
   timeEnd: string
+  isCurrent?: boolean
 }
 
 interface Props {
@@ -19,7 +20,7 @@ const props = withDefaults(defineProps<Props>(), {
   currentTimeEnd: '00:18',
   voiceOptions: () => [
     { id: '1', text: "Hello everyone, welcome to today's video", timeStart: '00:12', timeEnd: '00:18' },
-    { id: '2', text: 'about voice cloning technology and how', timeStart: '00:18', timeEnd: '00:24' },
+    { id: '2', text: 'about voice cloning technology and how', timeStart: '00:18', timeEnd: '00:24', isCurrent: true },
     { id: '3', text: 'it can be used in dubbing and content', timeStart: '00:24', timeEnd: '00:30' },
     { id: '4', text: 'creation workflows across languages', timeStart: '00:30', timeEnd: '00:35' },
   ]
@@ -30,7 +31,9 @@ const emit = defineEmits<{
   (e: 'reclone', data: { voiceId: string; variant: string }): void
 }>()
 
-const selectedVoiceId = ref(props.voiceOptions[0]?.id || '')
+// Default to the current voice option, or first one if none marked
+const currentVoice = props.voiceOptions.find(v => v.isCurrent)
+const selectedVoiceId = ref(currentVoice?.id || props.voiceOptions[0]?.id || '')
 const selectedVariant = ref('determined')
 
 const variants = [
@@ -82,7 +85,7 @@ const handleReclone = () => {
           :key="voice.id"
           class="w-full h-14 px-4 flex items-center gap-2.5 cursor-pointer transition-colors"
           :class="[
-            selectedVoiceId === voice.id ? 'bg-[#eef0ff] rounded-lg' : 'hover:bg-[#f7f9fe]',
+            selectedVoiceId === voice.id ? 'bg-[#eef0ff]' : 'hover:bg-[#f7f9fe]',
             index < voiceOptions.length - 1 ? 'border-b border-[#e5e5e5]' : ''
           ]"
           @click="selectedVoiceId = voice.id"
@@ -96,7 +99,7 @@ const handleReclone = () => {
           </div>
 
           <!-- Text -->
-          <div class="flex-1 flex flex-col gap-0.5 min-w-0">
+          <div class="flex-1 flex flex-col gap-0.5 min-w-0 text-left">
             <span
               class="text-xs font-['Reddit_Sans'] truncate"
               :class="selectedVoiceId === voice.id ? 'font-medium text-[#695fee]' : 'text-[#202123]'"
@@ -104,12 +107,14 @@ const handleReclone = () => {
             <span class="text-[10px] text-[#979797] font-['Reddit_Sans']">{{ voice.timeStart }} - {{ voice.timeEnd }}</span>
           </div>
 
-          <!-- Check Icon -->
-          <UIcon
+          <!-- Current Badge -->
+          <div
             v-if="selectedVoiceId === voice.id"
-            name="i-lucide-check"
-            class="w-3.5 h-3.5 text-[#695fee] flex-shrink-0"
-          />
+            class="flex items-center gap-1 flex-shrink-0"
+          >
+            <UIcon name="i-lucide-lock" class="w-[11px] h-[11px] text-[#695fee]" />
+            <span class="text-[10px] font-medium text-[#695fee] font-['Reddit_Sans']">Current</span>
+          </div>
         </button>
       </div>
 
@@ -136,8 +141,9 @@ const handleReclone = () => {
         @click="handleReclone"
       >
         <UIcon name="i-lucide-refresh-cw" class="w-4 h-4 text-white" />
-        Re-Clone Subtitle
+        Re-Clone
       </button>
     </div>
   </div>
 </template>
+

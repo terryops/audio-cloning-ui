@@ -14,7 +14,8 @@
       "Bash(vercel:*)",
       "Bash(node scripts/generate-component-codes.js:*)",
       "Bash(git commit:*)",
-      "Bash(git push:*)"
+      "Bash(git push:*)",
+      "Bash(npm run dev:*)"
     ]
   }
 }
