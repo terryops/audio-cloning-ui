@@ -1,6 +1,23 @@
 <template>
-  <div class="flex justify-center">
-    <div class="shadow-2xl rounded-xl overflow-hidden">
+  <div ref="containerRef" class="flex justify-center">
+    <!-- Wide components: scale to fit -->
+    <div
+      v-if="isWideComponent"
+      class="origin-top-center"
+      :style="{
+        transform: `scale(${containerScale})`,
+        transformOrigin: 'top center',
+        width: '1440px',
+        height: 790 * containerScale + 'px',
+      }"
+    >
+      <component
+        :is="componentMap[componentId]"
+        v-bind="componentProps[componentId]"
+      />
+    </div>
+    <!-- Normal components -->
+    <div v-else class="shadow-2xl rounded-xl overflow-hidden">
       <component
         :is="componentMap[componentId]"
         v-bind="componentProps[componentId]"
@@ -16,6 +33,35 @@
 const route = useRoute()
 
 const componentId = computed(() => route.params.id as string)
+
+const wideComponents = ['subtitle-editor-cps', 'translation-editor-cps']
+const isWideComponent = computed(() => wideComponents.includes(componentId.value))
+
+const containerRef = ref<HTMLElement | null>(null)
+const containerWidth = ref(1440)
+
+const containerScale = computed(() => {
+  const scale = containerWidth.value / 1440
+  return Math.min(scale, 1)
+})
+
+let resizeObserver: ResizeObserver | null = null
+
+onMounted(() => {
+  if (containerRef.value) {
+    containerWidth.value = containerRef.value.clientWidth
+    resizeObserver = new ResizeObserver((entries) => {
+      for (const entry of entries) {
+        containerWidth.value = entry.contentRect.width
+      }
+    })
+    resizeObserver.observe(containerRef.value)
+  }
+})
+
+onUnmounted(() => {
+  resizeObserver?.disconnect()
+})
 
 const componentMap: Record<string, any> = {
   'billing-empty': resolveComponent('BillingDetailsEmpty'),
