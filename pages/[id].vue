@@ -1,16 +1,7 @@
 <template>
   <div ref="containerRef" class="flex justify-center">
-    <!-- Wide components: scale to fit -->
-    <div
-      v-if="isWideComponent"
-      class="origin-top-center"
-      :style="{
-        transform: `scale(${containerScale})`,
-        transformOrigin: 'top center',
-        width: '1440px',
-        height: 790 * containerScale + 'px',
-      }"
-    >
+    <!-- Wide components: scale to fit via zoom -->
+    <div v-if="isWideComponent" :style="{ zoom: containerScale }">
       <component
         :is="componentMap[componentId]"
         v-bind="componentProps[componentId]"
