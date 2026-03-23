@@ -1,23 +1,33 @@
 <template>
-  <div ref="containerRef" class="w-full min-w-0 overflow-hidden">
-    <div class="flex justify-center">
-      <!-- Wide components: scale to fit via zoom -->
-      <div v-if="isWideComponent" :style="{ zoom: containerScale }">
+  <div class="flex justify-center">
+    <!-- Wide components: scale to fit -->
+    <div
+      v-if="isWideComponent"
+      :style="{ height: 790 * containerScale + 'px' }"
+    >
+      <div
+        :style="{
+          transform: `scale(${containerScale})`,
+          transformOrigin: 'top center',
+          width: '1440px',
+          height: '790px',
+        }"
+      >
         <component
           :is="componentMap[componentId]"
           v-bind="componentProps[componentId]"
         />
       </div>
-      <!-- Normal components -->
-      <div v-else class="shadow-2xl rounded-xl overflow-hidden">
-        <component
-          :is="componentMap[componentId]"
-          v-bind="componentProps[componentId]"
-          @create-speech="handleCreateSpeech"
-          @create-voice="handleCreateVoice"
-          @play-voice="handlePlayVoice"
-        />
-      </div>
+    </div>
+    <!-- Normal components -->
+    <div v-else class="shadow-2xl rounded-xl overflow-hidden">
+      <component
+        :is="componentMap[componentId]"
+        v-bind="componentProps[componentId]"
+        @create-speech="handleCreateSpeech"
+        @create-voice="handleCreateVoice"
+        @play-voice="handlePlayVoice"
+      />
     </div>
   </div>
 </template>
@@ -30,30 +40,24 @@ const componentId = computed(() => route.params.id as string)
 const wideComponents = ['subtitle-editor-cps', 'translation-editor-cps']
 const isWideComponent = computed(() => wideComponents.includes(componentId.value))
 
-const containerRef = ref<HTMLElement | null>(null)
-const containerWidth = ref(1440)
+// Calculate available width from window size minus known fixed panels
+// sidebar=240px (w-60), code panel=650px (w-[650px]), preview padding=64px (p-8)
+const windowWidth = ref(1440)
 
 const containerScale = computed(() => {
-  const scale = containerWidth.value / 1440
-  return Math.min(scale, 1)
+  const available = windowWidth.value - 240 - 650 - 64
+  return Math.min(Math.max(available / 1440, 0.25), 1)
 })
 
-let resizeObserver: ResizeObserver | null = null
+const onResize = () => { windowWidth.value = window.innerWidth }
 
 onMounted(() => {
-  if (containerRef.value) {
-    containerWidth.value = containerRef.value.clientWidth
-    resizeObserver = new ResizeObserver((entries) => {
-      for (const entry of entries) {
-        containerWidth.value = entry.contentRect.width
-      }
-    })
-    resizeObserver.observe(containerRef.value)
-  }
+  windowWidth.value = window.innerWidth
+  window.addEventListener('resize', onResize)
 })
 
 onUnmounted(() => {
-  resizeObserver?.disconnect()
+  window.removeEventListener('resize', onResize)
 })
 
 const componentMap: Record<string, any> = {
