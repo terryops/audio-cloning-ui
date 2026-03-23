@@ -379,50 +379,47 @@ const activeSubtitle = computed(() => subtitles.value.find(s => s.id === activeS
       </div>
     </div>
 
-    <!-- CPS Info Panel -->
-    <div class="absolute left-[895px] top-[110px] w-[300px] bg-white rounded-xl p-5 flex flex-col gap-3.5 z-20" style="box-shadow: 0 4px 24px rgba(0,0,0,0.09);">
-      <h3 class="text-[15px] font-bold text-[#1a1a2e]">Characters Per Second (CPS)</h3>
-      <p class="text-xs text-[#666] leading-relaxed">
-        CPS measures how fast viewers need to read. It's calculated by dividing character count by subtitle duration.
-      </p>
-      <div class="h-px bg-[#ebebec]" />
-      <!-- Legend -->
-      <div class="flex flex-col gap-2.5">
-        <!-- Language Tag -->
-        <div class="flex items-center gap-1.5 bg-[#f0edff] rounded-xl px-2.5 py-1 w-fit">
-          <UIcon name="i-lucide-globe" class="w-3 h-3 text-[#6c5ce7]" />
-          <span class="text-[11px] font-medium text-[#6c5ce7]">English</span>
+    <!-- CPS Panels Container -->
+    <div class="absolute left-[895px] top-[110px] z-20 flex flex-col gap-4">
+      <!-- CPS Info Panel -->
+      <div class="w-[300px] bg-white rounded-xl p-5 flex flex-col gap-3.5" style="box-shadow: 0 4px 24px rgba(0,0,0,0.09);">
+        <h3 class="text-[15px] font-bold text-[#1a1a2e]">Characters Per Second (CPS)</h3>
+        <p class="text-xs text-[#666] leading-relaxed">
+          CPS measures how fast viewers need to read. It's calculated by dividing character count by subtitle duration.
+        </p>
+        <div class="h-px bg-[#ebebec]" />
+        <!-- Legend -->
+        <div class="flex flex-col gap-2.5">
+          <div class="flex items-center gap-1.5 bg-[#f0edff] rounded-xl px-2.5 py-1 w-fit">
+            <UIcon name="i-lucide-globe" class="w-3 h-3 text-[#6c5ce7]" />
+            <span class="text-[11px] font-medium text-[#6c5ce7]">English</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <div class="w-2.5 h-2.5 rounded-full bg-[#4caf50] shrink-0" />
+            <span class="text-[11px] text-[#444]">&lt; 15 CPS — Comfortable reading speed</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <div class="w-2.5 h-2.5 rounded-full bg-[#ff9800] shrink-0" />
+            <span class="text-[11px] text-[#444]">15–25 CPS — Fast, may be hard to follow</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <div class="w-2.5 h-2.5 rounded-full bg-[#f44336] shrink-0" />
+            <span class="text-[11px] text-[#444]">&gt; 25 CPS — Too fast, needs adjustment</span>
+          </div>
         </div>
-        <!-- Green -->
-        <div class="flex items-center gap-2">
-          <div class="w-2.5 h-2.5 rounded-full bg-[#4caf50] shrink-0" />
-          <span class="text-[11px] text-[#444]">&lt; 15 CPS — Comfortable reading speed</span>
-        </div>
-        <!-- Orange -->
-        <div class="flex items-center gap-2">
-          <div class="w-2.5 h-2.5 rounded-full bg-[#ff9800] shrink-0" />
-          <span class="text-[11px] text-[#444]">15–25 CPS — Fast, may be hard to follow</span>
-        </div>
-        <!-- Red -->
-        <div class="flex items-center gap-2">
-          <div class="w-2.5 h-2.5 rounded-full bg-[#f44336] shrink-0" />
-          <span class="text-[11px] text-[#444]">&gt; 25 CPS — Too fast, needs adjustment</span>
-        </div>
+        <div class="h-px bg-[#ebebec]" />
+        <button class="flex items-center justify-center gap-1.5 w-full hover:opacity-70 transition-opacity">
+          <UIcon name="i-lucide-settings" class="w-3.5 h-3.5 text-[#888]" />
+          <span class="text-xs font-medium text-[#888]">Turn off CPS in Settings</span>
+        </button>
       </div>
-      <div class="h-px bg-[#ebebec]" />
-      <!-- Turn off CPS -->
-      <button class="flex items-center justify-center gap-1.5 w-full hover:opacity-70 transition-opacity">
-        <UIcon name="i-lucide-settings" class="w-3.5 h-3.5 text-[#888]" />
-        <span class="text-xs font-medium text-[#888]">Turn off CPS in Settings</span>
-      </button>
-    </div>
 
-    <!-- CPS Too High Tooltip -->
-    <div
-      v-if="activeSubtitle && activeSubtitle.cps > 25"
-      class="absolute left-[895px] top-[394px] w-[340px] bg-white rounded-xl p-6 flex flex-col gap-4 z-20"
-      style="box-shadow: 0 4px 24px rgba(0,0,0,0.09);"
-    >
+      <!-- CPS Too High Tooltip -->
+      <div
+        v-if="activeSubtitle && activeSubtitle.cps > 25"
+        class="w-[340px] bg-white rounded-xl p-6 flex flex-col gap-4"
+        style="box-shadow: 0 4px 24px rgba(0,0,0,0.09);"
+      >
       <div class="flex items-center justify-between">
         <h3 class="text-[15px] font-semibold text-[#1a1a2e]">CPS Too High</h3>
         <UIcon name="i-lucide-triangle-alert" class="w-[18px] h-[18px] text-[#c62828]" />
@@ -452,6 +449,7 @@ const activeSubtitle = computed(() => subtitles.value.find(s => s.id === activeS
           Extend One
         </button>
       </div>
+    </div>
     </div>
   </div>
 </template>
