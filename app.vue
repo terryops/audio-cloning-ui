@@ -18,17 +18,17 @@
         <div>
           <p class="text-xs font-semibold text-gray-500 uppercase tracking-wider px-3 mb-2">Voice Clone</p>
           <div class="flex flex-col gap-1">
-            <button
+            <NuxtLink
               v-for="item in voiceCloneItems"
               :key="item.id"
-              class="w-full text-left px-3 py-2 rounded-lg text-sm transition-colors"
+              :to="`/${item.id}`"
+              class="w-full text-left px-3 py-2 rounded-lg text-sm transition-colors block"
               :class="currentComponent === item.id
                 ? 'bg-[#695fee] text-white'
                 : 'text-gray-400 hover:text-white hover:bg-gray-700'"
-              @click="currentComponent = item.id"
             >
               {{ item.name }}
-            </button>
+            </NuxtLink>
           </div>
         </div>
 
@@ -50,17 +50,7 @@
             {{ currentComponentName }}
           </span>
         </div>
-        <div class="flex justify-center">
-          <div class="shadow-2xl rounded-xl overflow-hidden">
-            <component
-              :is="componentMap[currentComponent]"
-              v-bind="componentProps[currentComponent]"
-              @create-speech="handleCreateSpeech"
-              @create-voice="handleCreateVoice"
-              @play-voice="handlePlayVoice"
-            />
-          </div>
-        </div>
+        <NuxtPage />
       </div>
 
       <!-- Right: Code Panel -->
@@ -139,24 +129,15 @@
 <script setup lang="ts">
 import { codeToHtml } from 'shiki'
 
-const currentComponent = ref('voice-clone-prompt')
+const route = useRoute()
+
+const currentComponent = computed(() => (route.params.id as string) || 'voice-clone-prompt')
 const highlightedCode = ref('')
 const copied = ref(false)
 const isLoadingCode = ref(false)
 const currentCode = ref('')
-const autoRefresh = ref(true) // 自动刷新开关
+const autoRefresh = ref(true)
 let refreshInterval: ReturnType<typeof setInterval> | null = null
-
-// 分组菜单项
-const billingItems = [
-  { id: 'billing-empty', name: 'Empty State' },
-  { id: 'billing-voices', name: 'With Voices' },
-]
-
-const modalItems = [
-  { id: 'upgrade-plan', name: 'Upgrade Plan' },
-  { id: 'buy-clones', name: 'Buy Clones' },
-]
 
 const voiceCloneItems = [
   { id: 'voice-clone-prompt', name: 'Prompt Dialog' },
@@ -164,40 +145,11 @@ const voiceCloneItems = [
   { id: 'voice-clone-manage', name: 'Manage Dubbing' },
   { id: 're-clone-subtitle', name: 'Re-Clone Subtitle' },
   { id: 'download-dialog', name: 'Download Dialog' },
-]
-
-const dubbingItems = [
-  { id: 'dubbing-studio-container', name: 'Complete Flow' },
-  { id: 'dubbing-studio', name: 'Default' },
-  { id: 'dubbing-studio-no-clones', name: 'No Clones' },
-  { id: 'dubbing-recording', name: 'Recording Idle' },
-  { id: 'dubbing-recording-active', name: 'Recording Active' },
-  { id: 'dubbing-uploaded', name: 'File Uploaded' },
-  { id: 'dubbing-preview', name: 'Preview Voice' },
-  { id: 'dubbing-save', name: 'Save Dialog' },
+  { id: 'subtitle-editor-cps', name: 'Subtitle Editor CPS' },
+  { id: 'translation-editor-cps', name: 'Translation Editor CPS' },
 ]
 
 const menuItems = [...voiceCloneItems]
-
-const componentMap: Record<string, any> = {
-  'billing-empty': resolveComponent('BillingDetailsEmpty'),
-  'billing-voices': resolveComponent('BillingDetails'),
-  'upgrade-plan': resolveComponent('UpgradePlanModal'),
-  'buy-clones': resolveComponent('BuyClonesModal'),
-  'voice-clone-prompt': resolveComponent('VoiceClonePromptDialog'),
-  'voice-clone-speakers-off': resolveComponent('VoiceCloneSpeakersOff'),
-  'voice-clone-manage': resolveComponent('VoiceCloneManage'),
-  're-clone-subtitle': resolveComponent('ReCloneSubtitle'),
-  'download-dialog': resolveComponent('DownloadDialog'),
-  'dubbing-studio-container': resolveComponent('DubbingStudioContainer'),
-  'dubbing-studio': resolveComponent('DubbingStudio'),
-  'dubbing-studio-no-clones': resolveComponent('DubbingStudio'),
-  'dubbing-recording': resolveComponent('DubbingStudioRecording'),
-  'dubbing-recording-active': resolveComponent('DubbingStudioRecording'),
-  'dubbing-uploaded': resolveComponent('DubbingStudioUploaded'),
-  'dubbing-preview': resolveComponent('DubbingStudioPreview'),
-  'dubbing-save': resolveComponent('DubbingStudioSaveDialog'),
-}
 
 const fileNames: Record<string, string> = {
   'billing-empty': 'BillingDetailsEmpty.vue',
@@ -209,6 +161,8 @@ const fileNames: Record<string, string> = {
   'voice-clone-manage': 'VoiceCloneManage.vue',
   're-clone-subtitle': 'ReCloneSubtitle.vue',
   'download-dialog': 'DownloadDialog.vue',
+  'subtitle-editor-cps': 'SubtitleEditorCPS.vue',
+  'translation-editor-cps': 'TranslationEditorCPS.vue',
   'dubbing-studio-container': 'DubbingStudioContainer.vue',
   'dubbing-studio': 'DubbingStudio.vue',
   'dubbing-studio-no-clones': 'DubbingStudio.vue',
@@ -219,33 +173,12 @@ const fileNames: Record<string, string> = {
   'dubbing-save': 'DubbingStudioSaveDialog.vue',
 }
 
-const componentProps: Record<string, any> = {
-  'billing-empty': {},
-  'billing-voices': {},
-  'upgrade-plan': {},
-  'buy-clones': {},
-  'voice-clone-prompt': {},
-  'voice-clone-speakers-off': {},
-  'voice-clone-manage': {},
-  're-clone-subtitle': {},
-  'download-dialog': {},
-  'dubbing-studio-container': { availableClones: 2, totalClones: 3 },
-  'dubbing-studio': { availableClones: 2, totalClones: 3 },
-  'dubbing-studio-no-clones': { availableClones: 0, totalClones: 3 },
-  'dubbing-recording': { availableClones: 2, totalClones: 3 },
-  'dubbing-recording-active': { availableClones: 2, totalClones: 3 },
-  'dubbing-uploaded': { fileName: 'voice_sample.mp3', fileSize: '2.4 MB', totalDuration: 120 },
-  'dubbing-preview': { availableClones: 2, totalClones: 3, fileName: 'voice_sample.mp3', fileSize: '2.4 MB' },
-  'dubbing-save': { defaultName: 'My Voice Clone' },
-}
-
 const currentFileName = computed(() => fileNames[currentComponent.value])
 const currentComponentName = computed(() => {
   const item = menuItems.find(i => i.id === currentComponent.value)
   return item?.name || ''
 })
 
-// 从服务端 API 获取代码
 const fetchCode = async (fileName: string, showLoading = true) => {
   if (showLoading) {
     isLoadingCode.value = true
@@ -259,7 +192,6 @@ const fetchCode = async (fileName: string, showLoading = true) => {
     if (response?.code && response.code !== currentCode.value) {
       currentCode.value = response.code
 
-      // 语法高亮
       highlightedCode.value = await codeToHtml(response.code, {
         lang: 'vue',
         theme: 'github-dark'
@@ -274,7 +206,6 @@ const fetchCode = async (fileName: string, showLoading = true) => {
   }
 }
 
-// 监听组件切换
 watch(currentComponent, () => {
   const fileName = fileNames[currentComponent.value]
   if (fileName) {
@@ -282,7 +213,6 @@ watch(currentComponent, () => {
   }
 }, { immediate: true })
 
-// 手动刷新代码
 const refreshCode = () => {
   const fileName = fileNames[currentComponent.value]
   if (fileName) {
@@ -290,7 +220,6 @@ const refreshCode = () => {
   }
 }
 
-// 自动刷新（每2秒检查一次）
 const startAutoRefresh = () => {
   if (refreshInterval) return
 
@@ -298,7 +227,7 @@ const startAutoRefresh = () => {
     if (autoRefresh.value) {
       const fileName = fileNames[currentComponent.value]
       if (fileName) {
-        fetchCode(fileName, false) // 静默刷新，不显示 loading
+        fetchCode(fileName, false)
       }
     }
   }, 2000)
@@ -311,17 +240,14 @@ const stopAutoRefresh = () => {
   }
 }
 
-// 切换自动刷新
 const toggleAutoRefresh = () => {
   autoRefresh.value = !autoRefresh.value
 }
 
-// 组件挂载时启动自动刷新
 onMounted(() => {
   startAutoRefresh()
 })
 
-// 组件卸载时停止
 onUnmounted(() => {
   stopAutoRefresh()
 })
@@ -332,18 +258,6 @@ const copyCode = async () => {
   setTimeout(() => {
     copied.value = false
   }, 2000)
-}
-
-const handleCreateSpeech = () => {
-  console.log('Create speech clicked')
-}
-
-const handleCreateVoice = () => {
-  console.log('Create voice clicked')
-}
-
-const handlePlayVoice = (id: string) => {
-  console.log('Play voice:', id)
 }
 </script>
 
