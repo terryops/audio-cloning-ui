@@ -1,21 +1,23 @@
 <template>
-  <div ref="containerRef" class="flex justify-center">
-    <!-- Wide components: scale to fit via zoom -->
-    <div v-if="isWideComponent" :style="{ zoom: containerScale }">
-      <component
-        :is="componentMap[componentId]"
-        v-bind="componentProps[componentId]"
-      />
-    </div>
-    <!-- Normal components -->
-    <div v-else class="shadow-2xl rounded-xl overflow-hidden">
-      <component
-        :is="componentMap[componentId]"
-        v-bind="componentProps[componentId]"
-        @create-speech="handleCreateSpeech"
-        @create-voice="handleCreateVoice"
-        @play-voice="handlePlayVoice"
-      />
+  <div ref="containerRef" class="w-full min-w-0 overflow-hidden">
+    <div class="flex justify-center">
+      <!-- Wide components: scale to fit via zoom -->
+      <div v-if="isWideComponent" :style="{ zoom: containerScale }">
+        <component
+          :is="componentMap[componentId]"
+          v-bind="componentProps[componentId]"
+        />
+      </div>
+      <!-- Normal components -->
+      <div v-else class="shadow-2xl rounded-xl overflow-hidden">
+        <component
+          :is="componentMap[componentId]"
+          v-bind="componentProps[componentId]"
+          @create-speech="handleCreateSpeech"
+          @create-voice="handleCreateVoice"
+          @play-voice="handlePlayVoice"
+        />
+      </div>
     </div>
   </div>
 </template>
