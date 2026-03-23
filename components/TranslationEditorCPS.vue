@@ -181,10 +181,10 @@ const getCpsTextColor = (cps: number) => {
         <div class="border-t border-[#f0f2f6]" />
 
         <!-- Voice Properties -->
-        <div class="px-6 py-5">
-          <div class="flex gap-12">
-            <!-- Left Column -->
-            <div class="flex flex-col gap-5">
+        <div class="px-6 py-5 relative">
+          <div class="flex flex-col gap-4">
+            <!-- Row 1: 字幕效果 | 字幕字体 -->
+            <div class="flex gap-8">
               <div>
                 <p class="text-[13px] font-medium text-[#4a4b4c] mb-2">字幕效果</p>
                 <div class="flex gap-1.5">
@@ -203,28 +203,6 @@ const getCpsTextColor = (cps: number) => {
                   </button>
                 </div>
               </div>
-
-              <div>
-                <p class="text-[13px] font-medium text-[#4a4b4c] mb-2">字幕位置</p>
-                <div class="flex gap-1.5">
-                  <button class="w-[70px] h-9 rounded-[6px] bg-[#f7f9fe] flex items-center justify-center gap-1.5">
-                    <UIcon name="i-lucide-align-vertical-justify-start" class="w-4 h-4 text-[#21293c]" />
-                    <span class="text-[13px] text-[#21293c]">顶部</span>
-                  </button>
-                  <button class="w-[70px] h-9 rounded-[6px] bg-[#f7f9fe] flex items-center justify-center gap-1.5">
-                    <UIcon name="i-lucide-align-vertical-justify-center" class="w-4 h-4 text-[#21293c]" />
-                    <span class="text-[13px] text-[#21293c]">中间</span>
-                  </button>
-                  <button class="w-[70px] h-9 rounded-[6px] bg-[#f7f9fe] flex items-center justify-center gap-1.5">
-                    <UIcon name="i-lucide-align-vertical-justify-end" class="w-4 h-4 text-[#21293c]" />
-                    <span class="text-[13px] text-[#21293c]">底部</span>
-                  </button>
-                </div>
-              </div>
-            </div>
-
-            <!-- Right Column -->
-            <div class="flex flex-col gap-5">
               <div>
                 <p class="text-[13px] font-medium text-[#4a4b4c] mb-2">字幕字体</p>
                 <div class="h-9 w-[220px] rounded-[6px] bg-[#f7f9fe] flex items-center px-3 cursor-pointer">
@@ -232,7 +210,10 @@ const getCpsTextColor = (cps: number) => {
                   <UIcon name="i-lucide-chevron-down" class="w-3 h-3 text-[#21293c]" />
                 </div>
               </div>
+            </div>
 
+            <!-- Row 2: 原字幕 | 翻译字幕 -->
+            <div class="flex gap-8">
               <div>
                 <div class="flex items-center gap-3 mb-2">
                   <p class="text-[13px] font-medium text-[#4a4b4c]">原字幕</p>
@@ -258,7 +239,6 @@ const getCpsTextColor = (cps: number) => {
                   <div class="w-[34px] h-[34px] rounded-[6px] bg-[#21293c] border border-[#f2f4f9] cursor-pointer" />
                 </div>
               </div>
-
               <div>
                 <div class="flex items-center gap-3 mb-2">
                   <p class="text-[13px] font-medium text-[#4a4b4c]">翻译字幕</p>
@@ -285,7 +265,28 @@ const getCpsTextColor = (cps: number) => {
                 </div>
               </div>
             </div>
+
+            <!-- Row 3: 字幕位置 -->
+            <div>
+              <p class="text-[13px] font-medium text-[#4a4b4c] mb-2">字幕位置</p>
+              <div class="flex gap-1.5">
+                <button class="w-[70px] h-9 rounded-[6px] bg-[#f7f9fe] flex items-center justify-center gap-1.5">
+                  <UIcon name="i-lucide-align-vertical-justify-start" class="w-4 h-4 text-[#21293c]" />
+                  <span class="text-[13px] text-[#21293c]">顶部</span>
+                </button>
+                <button class="w-[70px] h-9 rounded-[6px] bg-[#f7f9fe] flex items-center justify-center gap-1.5">
+                  <UIcon name="i-lucide-align-vertical-justify-center" class="w-4 h-4 text-[#21293c]" />
+                  <span class="text-[13px] text-[#21293c]">中间</span>
+                </button>
+                <button class="w-[70px] h-9 rounded-[6px] bg-[#f7f9fe] flex items-center justify-center gap-1.5">
+                  <UIcon name="i-lucide-align-vertical-justify-end" class="w-4 h-4 text-[#21293c]" />
+                  <span class="text-[13px] text-[#21293c]">底部</span>
+                </button>
+              </div>
+            </div>
           </div>
+          <!-- Vertical separator -->
+          <div class="absolute right-0 top-5 w-[3px] h-[60px] bg-[#ebebf1] rounded-sm" />
         </div>
       </div>
     </div>
